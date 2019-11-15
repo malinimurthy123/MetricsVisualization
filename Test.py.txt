@@ -1,0 +1,99 @@
+import base64
+import urllib
+import matplotlib.pyplot as plt
+import numpy as np
+import jenkinsapi as jenkinsapi
+import requests
+import jenkins
+import jenkinsapi
+from jenkinsapi.jenkins import Jenkins
+import urllib3
+import os
+from xlrd.xlsx import ET
+import EnvironmentProperties
+import TextMatcher
+
+username=EnvironmentProperties.username
+password=EnvironmentProperties.password
+live='http://trhqqaautobld01.pacific.costcotravel.com'
+local='http://localhost:8080/'
+artifactid='http://txxxxxxxxxxxxxxxxxxxxxxxxx.com/job/Automated%20UI%20CRT%20P1%20-%20QAAUTO-ForOffshoreOnly/3/artifact/target/surefire-reports/failedTests.txt'
+#resp = requests.get(live, verify=True,cert=['path/to/ca-bundle.crt'])
+
+
+Job1,Job2,Job3,Job4=EnvironmentProperties.readJobs()
+#print(Job1)
+#print(Job2)
+#print(Job3)
+#print(Job4)
+JobId1=format(Job1)
+JobId2=format(Job2)
+JobId3=format(Job3)
+JobId4=format(Job4)
+
+#Demo for Project Automated UI CRT P1 - QA1-ForOffshoreOnly
+
+#URL1='http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/view/Automation%20Tests/view/QAAuto/job/Automated%20UI%20CRT%20P1%20-%20QAAUTO-ForOffshoreOnly/5/testReport/api/xml'
+
+server = jenkins.Jenkins(live, username, password)
+
+user = server.get_whoami()
+version = server.get_version()
+
+url='http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/job/Automated%20UI%20CRT%20P1%20-%20QAAUTO-ForOffshoreOnly/'
+
+print("total jobs")
+print(server.jobs_count())
+
+J = Jenkins(live, EnvironmentProperties.username, EnvironmentProperties.password)
+job = J['Automated UI CRT P1 - QA1-ForOffshoreOnly']
+
+http = urllib3.PoolManager()
+
+URL='http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/view/Automation%20Tests/view/QA1/job/Automated%20UI%20CRT%20P1%20-%20QA1-ForOffshoreOnly/'
+testReport='/testReport/api/xml'
+def jenkinsConnection():
+    http = urllib3.PoolManager()
+    #Sample='http://trhqqaautobld01.pacific.costcotravel.com/view/Automation%20Tests/view/QAAuto/job/Automated%20UI%20CRT%20P1%20-%20QAAUTO-ForOffshoreOnly/5/testReport/api/xml'
+    #URL1='http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/job/Automated%20UI%20CRT%20P1%20-%20QAAUTO-ForOffshoreOnly/'+JobId2+'/artifact/target/surefire-reports/failedTests.txt'
+    URL1='http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/view/Automation%20Tests/view/QA1/job/Automated%20UI%20CRT%20P1%20-%20QA1-ForOffshoreOnly/'+JobId1+'/testReport/api/xml'
+    URL2='http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/view/Automation%20Tests/view/QA1/job/Automated%20UI%20CRT%20P1%20-%20QA1-ForOffshoreOnly/'+JobId2+'/testReport/api/xml'
+    URL3='http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/view/Automation%20Tests/view/QA1/job/Automated%20UI%20CRT%20P1%20-%20QA1-ForOffshoreOnly/'+JobId3+'/testReport/api/xml'
+    URL4='http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com/view/Automation%20Tests/view/QA1/job/Automated%20UI%20CRT%20P1%20-%20QA1-ForOffshoreOnly/'+JobId4+'/testReport/api/xml'
+
+
+#make the connection
+    headers1 = urllib3.util.make_headers(basic_auth='malini.murthy:mahaVishnu@123')
+
+    #extract the <failCount>5</failCount><passCount>42</passCount> from the xml file
+
+   #Implementation for 4 report extraction
+    response = http.request('GET',URL1,headers=headers1)
+    data1 = response.data.decode('utf-8')
+
+    # write to the xml file
+    with open("report1.xml", "w") as f1:
+        f1.write(data1)
+
+    response = http.request('GET',URL2,headers=headers1)
+    data2 = response.data.decode('utf-8')
+
+    with open("report2.xml", "w") as f2:
+        f2.write(data2)
+
+    response = http.request('GET', URL3, headers=headers1)
+    data3 = response.data.decode('utf-8')
+
+    with open("report3.xml", "w") as f3:
+        f3.write(data3)
+
+    response = http.request('GET', URL4, headers=headers1)
+    data4 = response.data.decode('utf-8')
+
+    with open("report4.xml", "w") as f4:
+        f4.write(data4)
+
+    TextMatcher.reportParser()
+
+jenkinsConnection()
+

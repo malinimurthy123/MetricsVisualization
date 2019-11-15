@@ -1,0 +1,45 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import os
+import pandas as pd
+import xlrd
+from openpyxl import load_workbook
+from pandas import ExcelFile
+import openpyxl
+
+username='malini.murthy'
+password='XYZPQR@123'
+
+BuildName='http://XXXXXXXXXXXXXXXXX.com/job/Automated%20UI%20CRT%20P1%20-%20QAAUTO-ForOffshoreOnly'
+failedTests='artifact/target/surefire-reports/failedTests.txt'
+
+#Legacy CRT P2 QA1 Job3, Job4
+BuildNameQAP2Legacy='https://XXXXXXXXXXXXXXXXXXXXXXXX/view/Automation%20Tests/view/QA1/job/Automated%20UI%20CRT%20P2%20-%20QA1%20(Legacy)-ForOffshoreOnly/'
+
+#Legacy CRT P1 QA1 Job1,Job2
+BuildNameQAP1Legacy='https://XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/view/Automation%20Tests/view/QA1/job/Automated%20UI%20CRT%20P1%20-%20QA1%20(Legacy)-ForOffshoreOnly/'
+
+#read the excel file the jobIDs
+def readJobs():
+    path="D:\\Anaconda1\\Results\\JobList.xlsx"
+    wb_obj = openpyxl.load_workbook(path)
+    sheet_obj = wb_obj.active
+
+    Job1=sheet_obj.cell(row = 1, column = 2)
+    Job2=sheet_obj.cell(row = 2, column = 2)
+    Job3=sheet_obj.cell(row = 3, column = 2)
+    Job4=sheet_obj.cell(row = 4, column = 2)
+
+    Job1=Job1.value
+    Job2=Job2.value
+    Job3=Job3.value
+    Job4=Job4.value
+    #print('Job Ids')
+    #print(Job1)
+    #print(Job2)
+    #print(Job3)
+    #print(Job4)
+
+    return [Job1, Job2, Job3,Job4]
+readJobs()
